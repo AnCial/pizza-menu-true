@@ -61,7 +61,7 @@ function Header() {
   const style = {};
 
   return (
-    <header className="header footer">
+    <header className="header">
       <h1 style={style}> Fast React Pizza Co. </h1>
     </header>
   );
@@ -75,12 +75,21 @@ function Menu() {
   return (
     <menu className="menu">
       <h2>Our Menu</h2>
+
       {numPizza > 0 ? (
-        <ul className="pizzas">
-          {pizzaData.map((pizza) => (
-            <Pizza pizzaObject={pizza} key={pizza.name} />
-          ))}
-        </ul>
+        <>
+          <p>
+            We have {numPizza} pizzas available all handmade and true to their
+            authentic Italian roots. Baked to perfection in our stone oven, all
+            organic, all delicios
+          </p>
+
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizzaObject={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
       ) : (
         <p>Sorry, no pizzas available at the moment.</p>
       )}
@@ -88,17 +97,17 @@ function Menu() {
   );
 }
 
-function Pizza(props) {
-  console.log(props);
-  if (props.pizzaObject.soldOut) return null;
+function Pizza({ pizzaObject }) {
+  // if (pizzaObject.soldOut) return null;
 
   return (
-    <li className="pizza">
-      <img src={props.pizzaObject.photoName} alt={props.pizzaObject.name} />
+    <li className={`pizza ${pizzaObject.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObject.photoName} alt={pizzaObject.name} />
       <div>
-        <h3>{props.pizzaObject.name}</h3>
-        <p>{props.pizzaObject.ingredients}</p>
-        <span>${props.pizzaObject.price}.99</span>
+        <h3>{pizzaObject.name}</h3>
+        <p>{pizzaObject.ingredients}</p>
+
+        <span>{pizzaObject.soldOut ? "SOLD OUT" : pizzaObject.price}</span>
       </div>
     </li>
   );
@@ -120,7 +129,7 @@ function Footer() {
   return (
     <footer className="footer">
       {isOpen ? (
-        <Order closeHour={closeHour} />
+        <Order closeHour={closeHour} openHour={openHour} />
       ) : (
         <p>We're currently closed. We open at {openHour}:00.</p>
       )}
@@ -128,11 +137,12 @@ function Footer() {
   );
 }
 
-function Order(props) {
+function Order({ closeHour, openHour }) {
   return (
     <div className="order">
       <p>
-        We're open until {props.closeHour}:00. Come visit us or order online.
+        We're open from {openHour}:00 until {closeHour}:00. Come visit us or
+        order online.
       </p>
       <button className="btn">Order</button>
     </div>
