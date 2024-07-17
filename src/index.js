@@ -58,7 +58,6 @@ function App() {
 }
 
 function Header() {
-  // const style = { color: "red", fontSize: "48px", textTransform: "uppercase" };
   const style = {};
 
   return (
@@ -69,13 +68,39 @@ function Header() {
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  // const pizzas = [];
+
+  const numPizza = pizzas.length;
   return (
     <menu className="menu">
       <h2>Our Menu</h2>
-      <Pizza />
-      <Pizza />
-      <Pizza />
+      {numPizza > 0 ? (
+        <ul className="pizzas">
+          {pizzaData.map((pizza) => (
+            <Pizza pizzaObject={pizza} key={pizza.name} />
+          ))}
+        </ul>
+      ) : (
+        <p>Sorry, no pizzas available at the moment.</p>
+      )}
     </menu>
+  );
+}
+
+function Pizza(props) {
+  console.log(props);
+  if (props.pizzaObject.soldOut) return null;
+
+  return (
+    <li className="pizza">
+      <img src={props.pizzaObject.photoName} alt={props.pizzaObject.name} />
+      <div>
+        <h3>{props.pizzaObject.name}</h3>
+        <p>{props.pizzaObject.ingredients}</p>
+        <span>${props.pizzaObject.price}.99</span>
+      </div>
+    </li>
   );
 }
 
@@ -94,19 +119,22 @@ function Footer() {
 
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}We're currently open
+      {isOpen ? (
+        <Order closeHour={closeHour} />
+      ) : (
+        <p>We're currently closed. We open at {openHour}:00.</p>
+      )}
     </footer>
   );
-
-  // return React.createElement("footer", null, "© 2024 Fast React Pizza Co.");
 }
 
-function Pizza() {
+function Order(props) {
   return (
-    <div>
-      <img src="pizzas/focaccia.jpg" alt="Focaccia" />
-      <h3>Focaccia </h3>
-      <p>Bread with italian olive oil and rosemary</p>
+    <div className="order">
+      <p>
+        We're open until {props.closeHour}:00. Come visit us or order online.
+      </p>
+      <button className="btn">Order</button>
     </div>
   );
 }
